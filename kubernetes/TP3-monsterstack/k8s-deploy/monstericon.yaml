@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: monstericon
+  labels:
+    app: monsterstack
+spec:
+  ports:
+    - port: 5000
+  selector:
+    app: monsterstack
+    partie: monstericon
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monstericon
+  labels:
+    app: monsterstack
+spec:
+  selector:
+    matchLabels:
+      app: monsterstack
+      partie: monstericon
+  strategy:
+    type: Recreate
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: monsterstack
+        partie: monstericon
+    spec:
+      containers:
+      - name: monstericon
+        image: monstericon
+        ports:
+        - containerPort: 5000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 10
+          failureThreshold: 3
+        env:
+        - name: CONTEXT
+          value: DEV
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "50Mi"
