@@ -36,28 +36,29 @@ spec:
       - name: monstericon
         image: monstericon
         ports:
-        - containerPort: 9090
-        # livenessProbe:
-        #   initialDelaySeconds: 1
-        #   periodSeconds: 5
-        #   timeoutSeconds: 1
-        #   successThreshold: 1
-        #   failureThreshold: 1
-        #   exec:
-        #     command:
-        #     - stat
-        #     - /run/funkwhale/funkwhale.sock
-        # readinessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 5000
-        #   initialDelaySeconds: 5
-        #   timeoutSeconds: 1
-        #   periodSeconds: 10
-        #   failureThreshold: 3
+        - containerPort: 5000
+        livenessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 1
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 5000
+            httpHeaders:
+            - name: Accept
+              value: application/json
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 10
+          failureThreshold: 3
         env:
         - name: CONTEXT
-          value: PROD
+          value: DEV
         resources:
           requests:
             cpu: "100m"
