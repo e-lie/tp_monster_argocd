@@ -1,6 +1,6 @@
 version: '3'
 services:
-  monstericon:
+  frontend:
     build: .
     ports:
       - "5000:5000"
@@ -9,7 +9,7 @@ services:
     networks:
       - monster_network
 
-  dnmonster:
+  imagebackend:
     image: amouat/dnmonster:1.0
     networks:
       - monster_network

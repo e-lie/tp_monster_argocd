@@ -58,7 +58,7 @@ def get_identicon(name):
     image = redis_cache.get(name)
     if image is None:
         print ("Cache miss: picture icon not found in Redis", flush=True)
-        r = requests.get('http://dnmonster:8080/monster/' + name + '?size=80')
+        r = requests.get('http://imagebackend:8080/monster/' + name + '?size=80')
         image = r.content
     redis_cache.set(name, image)
 
