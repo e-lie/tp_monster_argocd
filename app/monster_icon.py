@@ -65,3 +65,4 @@ def get_identicon(name):
         r = requests.get(f"http://{imagebackend_domain}:8080/monster/{name}?size=80")
         image = r.content
     redis_cache.set(name, image)
+    return image
