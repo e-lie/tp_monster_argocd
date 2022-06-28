@@ -9,6 +9,8 @@ COPY boot.sh /
 RUN chmod a+x /boot.sh
 
 ENV CONTEXT PROD
+ENV IMAGEBACKEND_DOMAIN imagebackend
+ENV REDIS_DOMAIN redis
 EXPOSE 5000 9191
 USER uwsgi
 
