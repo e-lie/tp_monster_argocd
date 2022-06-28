@@ -4,8 +4,9 @@ import requests
 import hashlib
 import redis
 import socket
-
 import os
+
+
 imagebackend_domain = os.environ['IMAGEBACKEND_DOMAIN']
 redis_domain = os.environ['REDIS_DOMAIN']
 
@@ -65,4 +66,12 @@ def get_identicon(name):
         r = requests.get(f"http://{imagebackend_domain}:8080/monster/{name}?size=80")
         image = r.content
     redis_cache.set(name, image)
-    return image
+    return Response(image, mimetype='image/png')
+
+@app.route('/healthz')
+def healthz():
+    data = {'ready': 'true'}
+    return jsonify(data)
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
