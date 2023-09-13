@@ -10,6 +10,8 @@ services:
       - IMAGEBACKEND_DOMAIN=imagebackend
     networks:
       - monster_network
+    volumes:
+      - ./app:/app # used for hot reload off app code if CONTEXT is DEV (flask dev server)
 
   imagebackend:
     image: amouat/dnmonster:1.0

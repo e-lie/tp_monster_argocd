@@ -1,7 +1,8 @@
-from flask import Flask, Response, request
+from flask import Flask, Response, request, abort
 from flask import jsonify
 import requests
 import hashlib
+import logging
 import redis
 import socket
 import os
@@ -60,12 +61,31 @@ def mainpage():
 
 @app.route('/monster/<name>')
 def get_identicon(name):
-    image = redis_cache.get(name)
-    if image is None:
-        print ("Cache miss: picture icon not found in Redis", flush=True)
-        r = requests.get(f"http://{imagebackend_domain}:8080/monster/{name}?size=80")
-        image = r.content
-    redis_cache.set(name, image)
+    found_in_cache = False
+    try:
+        image = cache.get(name)
+        redis_unreachable = False
+        if image is not None:
+            found_in_cache = True
+            logging.info("Image trouvée dans le cache")
+    except:
+        redis_unreachable = True
+        logging.warning("Cache redis injoignable")
+
+    if not found_in_cache:
+        logging.info("Image non trouvée dans le cache")
+        try:
+            r = requests.get(f'http://{imagebackend_domain}:8080/monster/{name}?size=100')
+            image = r.content
+            logging.info("Image générée grâce au service dnmonster")
+
+            if not redis_unreachable:
+                cache.set(name, image)
+                logging.info("Image enregistrée dans le cache redis")
+        except:
+            logging.critical("Le service dnmonster est injoignable !")
+            abort(503)
+
     return Response(image, mimetype='image/png')
 
 @app.route('/healthz')
