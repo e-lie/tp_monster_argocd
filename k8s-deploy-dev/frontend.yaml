@@ -25,7 +25,7 @@ spec:
       partie: frontend
   strategy:
     type: RollingUpdate
-  replicas: 5
+  replicas: 3
   template:
     metadata:
       labels:
@@ -66,10 +66,10 @@ spec:
           value: redis
         - name: IMAGEBACKEND_DOMAIN
           value: imagebackend
-        resources:
-          requests:
-            cpu: "50m"
-            memory: "50Mi"
-          limits:
-            cpu: "150m"
-            memory: "100Mi"
+        # resources:
+        #   requests:
+        #     cpu: "50m"
+        #     memory: "20Mi"
+        #   limits:
+        #     cpu: "50m"
+        #     memory: "20Mi"
