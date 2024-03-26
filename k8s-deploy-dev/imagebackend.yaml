@@ -31,6 +31,7 @@ spec:
       labels:
         app: monsterstack
         partie: imagebackend
+        monlabel: enplus
     spec:
       containers:
       - image: amouat/dnmonster:1.0
